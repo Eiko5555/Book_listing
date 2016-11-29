@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Book_listing</string>
+    <string name="no_data_message">No data....</string>
+</resources>
