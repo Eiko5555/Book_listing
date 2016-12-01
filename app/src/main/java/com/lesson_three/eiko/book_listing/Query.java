@@ -101,6 +101,7 @@ public class Query {
                 String book_author = gettingBook2.getString("authors");
                 String book_title = gettingBook2.getString("title");
                 String book_info = gettingBook2.getString("description");
+
                 List_item listitem = new List_item(book_author, book_title,
                         book_info);
                 booklist.add(listitem);

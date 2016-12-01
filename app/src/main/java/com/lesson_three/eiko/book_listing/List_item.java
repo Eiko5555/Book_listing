@@ -7,8 +7,6 @@ public class List_item {
     private String mAuthor;
     private String mTitle;
     private String mInfomation;
-    private String mUrl;
-    private long mTime;
 
     public List_item(String author, String title,
                      String info ) {
@@ -29,11 +27,7 @@ public class List_item {
         return mInfomation;
     }
 
-    public String getmUrl() {
-        return mUrl;
-    }
 
-    public long getmTime() {
-        return mTime;
-    }
+
+
 }
