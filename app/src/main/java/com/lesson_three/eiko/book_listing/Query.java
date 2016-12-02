@@ -22,17 +22,18 @@ import java.util.List;
  * Created by eiko on 11/26/2016.
  */
 public class Query {
+    final static String TAG = "Query";
 
     private Query(){}
 
     public static List<List_item> fetchBookdata(String requestUrl){
-        String TAG = "Query";
 
         URL url = createUrl(requestUrl);
         String jsonResponse = null;
         try{
             jsonResponse = makeHttpRequest(url);
-        }catch (IOException e){}
+        }catch (IOException e){
+            }
         List<List_item> list_book = extractFromJson(jsonResponse);
         Log.v(TAG,"fetching...");
         return list_book;
@@ -91,18 +92,25 @@ public class Query {
         if (TextUtils.isEmpty(bookJSON)){
             return null;
         }
+
         List<List_item> booklist = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(bookJSON);
             JSONArray bookArray = jsonObject.getJSONArray("items");
-            for (int i = 0; i<bookArray.length(); i++){
-                JSONObject gettingbook = bookArray.getJSONObject(i);
-                JSONObject gettingBook2 = gettingbook.getJSONObject("volumeInfo");
-                String book_author = gettingBook2.getString("authors");
-                String book_title = gettingBook2.getString("title");
-                String book_info = gettingBook2.getString("description");
+            for (int i = 0; i < bookArray.length(); i++){
+                ArrayList<String> author = new ArrayList<>();
 
-                List_item listitem = new List_item(book_author, book_title,
+                JSONObject gettingbook = bookArray.getJSONObject(i);
+                JSONObject volumeInfo = gettingbook.getJSONObject("volumeInfo");
+
+                JSONArray book_author = volumeInfo.getJSONArray("authors");
+                for (int a = 0; a<book_author.length(); a++){
+                    author.add(book_author.getString(a));
+                }
+                String book_title = volumeInfo.getString("title");
+                String book_info = volumeInfo.getString("description");
+
+                List_item listitem = new List_item(author, book_title,
                         book_info);
                 booklist.add(listitem);
             }
@@ -110,6 +118,7 @@ public class Query {
         }catch (JSONException e){
             e.printStackTrace();
         }
+
         return booklist;
     }
 }

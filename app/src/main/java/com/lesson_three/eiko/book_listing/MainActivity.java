@@ -25,44 +25,43 @@ public class MainActivity extends AppCompatActivity implements
             "https://www.googleapis.com/books/v1/volumes?q=";
     private List_Adapter mAdapter;
     private EditText edittxtSearch;
-    private Button buttonSearch;
     private TextView noDatatxt;
-    ListView listview;
-    private String compleateUrl;
+    String search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_list);
-        noDatatxt = (TextView) findViewById(R.id.no_conecction_message);
 
-        buttonSearch = (Button) findViewById(R.id.button_search);
+        noDatatxt = (TextView) findViewById(R.id.no_conecction_message);
+        mAdapter = new List_Adapter(this, new ArrayList<List_item>());
+        ListView listview = (ListView) findViewById(R.id.listview);
+        listview.setAdapter(mAdapter);
+
+        ConnectivityManager connectManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
+        final LoaderManager lodermamagerager = getLoaderManager();
+        lodermamagerager.initLoader(0, null, this);
+
+        Button buttonSearch = (Button) findViewById(R.id.button_search);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 edittxtSearch = (EditText) findViewById(R.id.edittxtt_search);
-                final String search = edittxtSearch.getText().toString();
+                search = edittxtSearch.getText().toString();
                 if (search.length() > 0) {
                     search.replace(" ", "+");
-                    compleateUrl = URL_BASE + search;
-
-                    ConnectivityManager connectManager = (ConnectivityManager)
-                            getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
+//                    search = URL_BASE + search;
+//
+//                    ConnectivityManager connectManager = (ConnectivityManager)
+//                            getSystemService(Context.CONNECTIVITY_SERVICE);
+//                    NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
                     if (networkInfo != null && networkInfo.isConnected()) {
-                        LoaderManager lodermamagerager = getLoaderManager();
-                        lodermamagerager.restartLoader(0, null, MainActivity.this);
+                        getLoaderManager().restartLoader(0, null, MainActivity.this);
+                    } else {
+                        noDatatxt.setText("not conected");
                     }
-                    Log.v(TAG, "passing onclick to fetch data");
-                    //from this point i cant get through...
-                    getLoaderManager().initLoader(0, null, MainActivity.this);
-                    Log.v(TAG, "passing loader");
-                    Query.fetchBookdata(compleateUrl);
-                    mAdapter = new List_Adapter(MainActivity.this, new ArrayList<List_item>());
-                    listview = (ListView) findViewById(R.id.listview);
-                    listview.setAdapter(mAdapter);
-                } else {
-                    noDatatxt.setText("not conected");
                 }
             }
         });
@@ -72,30 +71,32 @@ public class MainActivity extends AppCompatActivity implements
 //        listview.setAdapter(mAdapter);
 //        noDatatxt = (TextView)findViewById(R.id.no_conecction_message);
 //        listview.setEmptyView(noDatatxt);
-        ConnectivityManager connectManager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            getLoaderManager().initLoader(0, null, this);  // .forceLoad();
-        } else if (networkInfo == null) {
-            noDatatxt.setText("not getting data from google...");
-        }
+//        ConnectivityManager connectManager = (ConnectivityManager)
+//                getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
+//        if (networkInfo != null && networkInfo.isConnected()) {
+//            getLoaderManager().initLoader(0, null, this);  // .forceLoad();
+//        } else if (networkInfo == null) {
+//            noDatatxt.setText("not getting data from google...");
+//        }
     }
 
     @Override
-    public Loader<List<List_item>> onCreateLoader(int i,
-                                                  Bundle bundle) {
-        //return null;
-        return new Booklist_Loader(this, compleateUrl);
+    public Loader<List<List_item>> onCreateLoader(int i, Bundle bundle) {
+       return new Booklist_Loader(this, URL_BASE + search);
     }
 
     @Override
     public void onLoadFinished(Loader<List<List_item>> loader, List<List_item> list_items) {
         Log.v(TAG,"pass onLoadFinished");
+       // mAdapter.clear();
         // noDatatxt.setText(R.string.no_data_message);
-        mAdapter.clear();
         if (list_items != null && !list_items.isEmpty()) {
+            noDatatxt.setVisibility(View.GONE);
             mAdapter.addAll(list_items);
+        }else{
+            noDatatxt.setVisibility(View.VISIBLE);
+            noDatatxt.setText("nothing to show..");
         }
     }
 
