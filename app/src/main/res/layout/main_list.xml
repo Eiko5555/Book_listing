@@ -29,10 +29,17 @@
         android:text="search" />
     <ProgressBar
         android:id="@+id/loading_indicator"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edittxtt_search" />
+        android:layout_below="@+id/edittxtt_search"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/no_conecction_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="25sp" />
 
     <ListView
         android:id="@+id/listview"
@@ -42,11 +49,4 @@
         android:orientation="vertical"
         android:padding="@dimen/padding_10" />
 
-    <TextView
-        android:id="@+id/no_conecction_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textSize="25sp"
-        android:visibility="visible"/>
-</RelativeLayout>
+    </RelativeLayout>

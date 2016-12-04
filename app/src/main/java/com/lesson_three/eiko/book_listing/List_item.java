@@ -8,23 +8,24 @@ import java.util.ArrayList;
  * Created by eiko on 11/26/2016.
  */
 public class List_item {
-    private ArrayList<String> mAuthor;
+
     private String mTitle;
+    private ArrayList<String> mAuthor;
     private String mInfomation;
 
-    public List_item(ArrayList<String> author, String title,
+    public List_item(String title, ArrayList<String> author,
                      String info ) {
-        mAuthor = author;
         mTitle = title;
+        mAuthor = author;
         mInfomation = info;
-    }
-
-    public ArrayList<String> getmAuthor() {
-        return mAuthor;
     }
 
     public String getmTitle() {
         return mTitle;
+    }
+
+    public ArrayList<String> getmAuthor() {
+        return mAuthor;
     }
 
     public String getmInfomation() {

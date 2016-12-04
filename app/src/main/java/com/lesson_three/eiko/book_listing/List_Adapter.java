@@ -16,6 +16,7 @@ import java.util.List;
 public class List_Adapter extends ArrayAdapter<List_item>{
 
     public List_Adapter(Context contex, List<List_item> listitem){
+
         super(contex, 0, listitem);
     }
 
@@ -28,6 +29,10 @@ public class List_Adapter extends ArrayAdapter<List_item>{
 
             List_item currentItem = getItem(position);
 
+            TextView txtTitle = (TextView)listItemView.findViewById(
+                    R.id.txt_title);
+            txtTitle.setText(currentItem.getmTitle());
+
             TextView txtAuthor = (TextView) listItemView.findViewById(
                     R.id.txt_author);
             ArrayList<String> bookAuthorList = currentItem.getmAuthor();
@@ -39,10 +44,6 @@ public class List_Adapter extends ArrayAdapter<List_item>{
                 }
             }
             txtAuthor.setText(stringbuilderAuthor.toString());
-
-            TextView txtTitle = (TextView)listItemView.findViewById(
-                    R.id.txt_title);
-            txtTitle.setText(currentItem.getmTitle());
 
             TextView txtInfo = (TextView)listItemView.findViewById(
                     R.id.txt_bookinfo);

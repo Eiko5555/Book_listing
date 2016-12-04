@@ -1,7 +1,8 @@
 package com.lesson_three.eiko.book_listing;
 
-import android.content.AsyncTaskLoader;
+import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.List;
@@ -19,7 +20,7 @@ String mUrl;
 
     @Override
     protected void onStartLoading() {
-        Log.v(TAG,"passing onStartLoadeing");
+        Log.v(TAG,"passing onStartLoading");
         forceLoad();
     }
 
@@ -29,7 +30,9 @@ String mUrl;
             return  null;
         }
         Log.v(TAG,"passing loadInBackground");
+        Log.v(TAG,"mURL: "+mUrl);
         List<List_item> books = Query.fetchBookdata(mUrl);
+        //Log.v(TAG,"books: " + books.toString());
         return books;
     }
 }

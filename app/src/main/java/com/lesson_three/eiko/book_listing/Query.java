@@ -33,26 +33,29 @@ public class Query {
         try{
             jsonResponse = makeHttpRequest(url);
         }catch (IOException e){
+            Log.v(TAG,"Exception making makeHttpRequest in Query.java: "+e);
             }
+        Log.v(TAG,"jsonResponse: " + jsonResponse);
         List<List_item> list_book = extractFromJson(jsonResponse);
-        Log.v(TAG,"fetching...");
         return list_book;
     }
     private static URL createUrl(String string_url){
         URL url = null;
         try {
-            new URL(string_url);
+            url = new URL(string_url);
         }catch (MalformedURLException e){}
         return url;
     }
     private static String makeHttpRequest(URL url)throws IOException{
         String jsonResponse = "";
         if (url == null) {
+            Log.v(TAG,"url was null in makeHTTPRequest");
             return jsonResponse;
         }
     HttpURLConnection urlConnection = null;
     InputStream inputStream = null;
     try {
+        Log.v(TAG,"Attempting connection");
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("GET");
         urlConnection.setReadTimeout(10000);
@@ -62,8 +65,10 @@ public class Query {
             inputStream = urlConnection.getInputStream();
             jsonResponse = readFromStream(inputStream);
         }else {
+            Log.v(TAG,"not going through..");
             }
     }catch (IOException e){
+        Log.v(TAG,"not going through..");
         }finally {
         if (urlConnection != null){
             urlConnection.disconnect();
@@ -96,6 +101,7 @@ public class Query {
         List<List_item> booklist = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(bookJSON);
+
             JSONArray bookArray = jsonObject.getJSONArray("items");
             for (int i = 0; i < bookArray.length(); i++){
                 ArrayList<String> author = new ArrayList<>();
@@ -110,7 +116,7 @@ public class Query {
                 String book_title = volumeInfo.getString("title");
                 String book_info = volumeInfo.getString("description");
 
-                List_item listitem = new List_item(author, book_title,
+                List_item listitem = new List_item(book_title, author,
                         book_info);
                 booklist.add(listitem);
             }
@@ -118,7 +124,6 @@ public class Query {
         }catch (JSONException e){
             e.printStackTrace();
         }
-
         return booklist;
     }
 }
