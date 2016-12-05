@@ -20,6 +20,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<List<List_item>> {
 
+    private static final int LOADER_ID = 0;
     private String TAG = "main_activity";
     private static String URL_BASE =
             "https://www.googleapis.com/books/v1/volumes?q=";
@@ -37,14 +38,15 @@ public class MainActivity extends AppCompatActivity implements
         noDatatxt = (TextView) findViewById(R.id.no_conecction_message);
         noDatatxt.setText("type and click search");
 
+        edittxtSearch = (EditText) findViewById(R.id.edittxtt_search);
+
         mAdapter = new List_Adapter(this, new ArrayList<List_item>());
         ListView listview = (ListView) findViewById(R.id.listview);
         listview.setAdapter(mAdapter);
         listview.setEmptyView(noDatatxt);
 
         final LoaderManager loadermanager = getSupportLoaderManager();
-       // loadermanager.initLoader(0, null, MainActivity.this);
-
+        loadermanager.initLoader(LOADER_ID, null, MainActivity.this);
 
         loadingCircle = findViewById(R.id.loading_indicator);
         loadingCircle.setVisibility(View.GONE);
@@ -53,30 +55,27 @@ public class MainActivity extends AppCompatActivity implements
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                edittxtSearch = (EditText) findViewById(R.id.edittxtt_search);
                 search = edittxtSearch.getText().toString();
                 mAdapter.clear();
                 ConnectivityManager connectManager = (ConnectivityManager)
                         getSystemService(Context.CONNECTIVITY_SERVICE);
-                 NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
+                NetworkInfo networkInfo = connectManager.getActiveNetworkInfo();
 
                 if (networkInfo != null && networkInfo.isConnected()) {
                     loadingCircle.setVisibility(View.GONE);
                     if (search.length() > 0) {
                         search = search.replace(" ", "+");
                         loadingCircle.setVisibility(View.VISIBLE);
-                      loadermanager.initLoader(0, null, MainActivity.this);
-
-                    }else {
+                        //loadermanager.initLoader(0, null, MainActivity.this).forceLoad();
+                    } else {
                         noDatatxt.setText("type something");
                     }
-                }else {
+                } else {
                     noDatatxt.setText("No Data");
                 }
-                loadermanager.restartLoader(0, null, MainActivity.this);
+                loadermanager.restartLoader(LOADER_ID, null, MainActivity.this).forceLoad();
             }
         });
-        //loadermanager.initLoader(0, null, MainActivity.this);
     }
 
     @Override
@@ -103,3 +102,4 @@ public class MainActivity extends AppCompatActivity implements
         mAdapter.clear();
     }
 }
+
