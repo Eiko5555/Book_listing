@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements
         final LoaderManager loadermanager = getSupportLoaderManager();
         loadermanager.initLoader(LOADER_ID, null, MainActivity.this);
 
+
         loadingCircle = findViewById(R.id.loading_indicator);
         loadingCircle.setVisibility(View.GONE);
 
